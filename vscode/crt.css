@@ -1,0 +1,53 @@
+/* Effet CRT pour le thème Matrix CRT — injecté par « Custom CSS and JS Loader ».
+   Après chaque modification : Palette → « Reload Custom CSS and JS ». */
+
+:root {
+  --crt-glow: #00ff4034;       /* halo du texte */
+  --crt-scanline: rgba(0, 0, 0, 0.22);
+  --crt-vignette: rgba(0, 0, 0, 0.45);
+}
+
+/* Halo phosphore sur le code */
+.monaco-editor .mtk {
+  text-shadow: 0 0 2px var(--crt-glow), 0 0 4px var(--crt-glow), 0 0 6px var(--crt-glow);
+}
+.monaco-editor .mtki {
+  text-shadow: 0 0 2px var(--crt-glow), 0 0 5px var(--crt-glow);
+}
+
+/* Halo plus discret sur le reste de l'interface */
+.monaco-workbench .part :is(.label-name, .action-label, .statusbar-item, .title-label, .monaco-highlighted-label) {
+  text-shadow: 0 0 3px var(--crt-glow);
+}
+
+/* Fira Code partout dans l'interface */
+.monaco-workbench,
+.monaco-workbench .statusbar-item,
+.monaco-workbench .monaco-list-row,
+.monaco-workbench .monaco-menu .action-label {
+  font-family: 'Fira Code', monospace !important;
+}
+
+/* Lignes de balayage + vignette, au-dessus de tout, sans bloquer la souris */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 2147483647;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at center, transparent 60%, var(--crt-vignette) 100%),
+    repeating-linear-gradient(to bottom, transparent 0 2px, var(--crt-scanline) 2px 3px);
+  animation: crt-flicker 6s steps(1) infinite;
+}
+
+/* Scintillement léger, coupé si « Réduire les animations » est actif dans macOS */
+@keyframes crt-flicker {
+  0%, 100% { opacity: 1; }
+  47% { opacity: 0.92; }
+  48% { opacity: 1; }
+  83% { opacity: 0.95; }
+}
+@media (prefers-reduced-motion: reduce) {
+  body::after { animation: none; }
+}
